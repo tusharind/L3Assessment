@@ -5,8 +5,7 @@ import SwiftUI
 class AuthViewModel: ObservableObject {
 
     @Published var isAuthenticated: Bool = false
-    @Published var errorMessage: String?
-    @Published var isLoading: Bool = false
+    @Published var loadingState: LoadingState = .idle
 
     private let persistence: PersistenceController
 
@@ -16,8 +15,7 @@ class AuthViewModel: ObservableObject {
     }
 
     func login(email: String, password: String) {
-        isLoading = true
-        errorMessage = nil
+        loadingState = .loading
 
         let context = persistence.context
         let fetchRequest: NSFetchRequest<Users> = Users.fetchRequest()
@@ -32,19 +30,20 @@ class AuthViewModel: ObservableObject {
                     isAuthenticated = true
                     UserDefaults.standard.set(true, forKey: "isLoggedIn")
                     UserDefaults.standard.set(email, forKey: "userEmail")
+                    loadingState = .success
                 } else {
-                    errorMessage = "Incorrect password"
+                    loadingState = .failure("Incorrect password")
                 }
             } else {
-                errorMessage = "User not found"
+                loadingState = .failure("User not found")
                 print("No user found with email: \(email)")
             }
         } catch {
-            errorMessage = "Login failed: \(error.localizedDescription)"
+            loadingState = .failure(
+                "Login failed: \(error.localizedDescription)"
+            )
             print("Login error: \(error)")
         }
-
-        isLoading = false
     }
 
     func logout() {
@@ -53,7 +52,7 @@ class AuthViewModel: ObservableObject {
         UserDefaults.standard.removeObject(forKey: "userEmail")
     }
 
-    func checkAuthenticationStatus() {
+    func isUserLoggedIn() {
         isAuthenticated = UserDefaults.standard.bool(forKey: "isLoggedIn")
     }
 

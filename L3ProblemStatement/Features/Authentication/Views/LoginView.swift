@@ -30,7 +30,7 @@ struct LoginView: View {
                 }
                 .padding(.horizontal, 30)
 
-                if let errorMessage = viewModel.errorMessage {
+                if let errorMessage = viewModel.loadingState.errorMessage {
                     Text(errorMessage)
                         .font(.caption)
                         .foregroundColor(.red)
@@ -40,7 +40,7 @@ struct LoginView: View {
                 Button(action: {
                     viewModel.login(email: email, password: password)
                 }) {
-                    if viewModel.isLoading {
+                    if viewModel.loadingState.isLoading {
                         ProgressView()
                             .tint(.white)
                             .frame(maxWidth: .infinity)
@@ -60,8 +60,11 @@ struct LoginView: View {
                 .padding(.horizontal, 30)
                 .padding(.top, 10)
                 .disabled(
-                    email.isEmpty || password.isEmpty || viewModel.isLoading
+                    email.isEmpty || password.isEmpty || viewModel.loadingState.isLoading
                 )
+                
+                Text("seeded user: tushar@gmail.com password: tushar@123")
+                    .font(.caption)
 
                 Spacer()
             }

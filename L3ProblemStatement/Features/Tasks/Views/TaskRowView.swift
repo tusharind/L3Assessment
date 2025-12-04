@@ -13,7 +13,8 @@ struct TaskRowView: View {
                 }
             }) {
                 Image(
-                    systemName: task.completed ? "checkmark.circle.fill" : "circle"
+                    systemName: task.completed
+                        ? "checkmark.circle.fill" : "circle"
                 )
                 .font(.system(size: 24))
                 .foregroundColor(task.completed ? .green : .gray.opacity(0.5))
@@ -26,12 +27,7 @@ struct TaskRowView: View {
                         .font(.system(size: 16, weight: .medium))
                         .foregroundColor(.primary)
                         .lineLimit(2)
-                    
-                    if isLocal {
-                        Image(systemName: "internaldrive")
-                            .font(.caption2)
-                            .foregroundColor(.blue)
-                    }
+
                 }
 
                 HStack(spacing: 12) {
@@ -58,8 +54,7 @@ struct TaskRowView: View {
         .padding(16)
         .background(Color(.systemBackground))
         .cornerRadius(12)
-        .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
-        .opacity(isLocal ? 1.0 : 0.7)
+
     }
 
     private func formatDate(_ dateString: String) -> String {

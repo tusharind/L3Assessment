@@ -2,7 +2,7 @@ import Foundation
 
 final class NetworkClient: NetworkClientProtocol {
 
-    private let interceptor: LoggerInterceptor
+    private let interceptor: InterceptorProtocol
     private let session: URLSession
 
     init(
@@ -39,13 +39,13 @@ final class NetworkClient: NetworkClientProtocol {
             throw NetworkError.unknown(NSError(domain: "", code: -1))
         }
 
-        if let logger = interceptor as? LoggerInterceptor {
-            logger.logResponse(
-                data: data,
-                response: httpResponse,
-                error: requestError
-            )
-        }
+        let logger = interceptor
+
+        logger.logResponse(
+            data: data,
+            response: httpResponse,
+            error: requestError
+        )
 
         guard 200..<300 ~= httpResponse.statusCode else {
             throw NetworkError.requestFailed(
@@ -61,4 +61,3 @@ final class NetworkClient: NetworkClientProtocol {
         }
     }
 }
-

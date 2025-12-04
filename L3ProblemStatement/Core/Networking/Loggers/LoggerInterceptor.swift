@@ -10,7 +10,7 @@ final class LoggerInterceptor: InterceptorProtocol {
         return myRequest
     }
 
-    private func logRequest(_ request: URLRequest) {
+    internal func logRequest(_ request: URLRequest) {
 
         if let url = request.url {
             print("URL: \(url.absoluteString)")

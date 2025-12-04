@@ -18,3 +18,9 @@ enum Priority: String, Codable {
     case Low = "Low"
 
 }
+
+enum TaskFilter {
+    case all
+    case completed
+    case pending
+}

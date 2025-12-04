@@ -15,7 +15,7 @@ struct RootView: View {
             }
         }
         .onAppear {
-            authViewModel.checkAuthenticationStatus()
+            authViewModel.isUserLoggedIn()
         }
     }
 }

@@ -7,8 +7,8 @@ struct TasksListView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
-                if let errorMessage = viewModel.errorMessage {
+            VStack {
+                if let errorMessage = viewModel.loadingState.errorMessage {
                     HStack {
                         Text(errorMessage)
                             .font(.caption)
@@ -27,27 +27,69 @@ struct TasksListView: View {
 
                 }
 
-                ZStack {
-                    if viewModel.isLoading && viewModel.tasks.isEmpty {
-                        ProgressView("Loading tasks...")
-                    } else if viewModel.tasks.isEmpty {
-                        VStack(spacing: 16) {
+                Picker("Filter", selection: $viewModel.selectedFilter) {
+                    Text("All").tag(TaskFilter.all)
+                    Text("Completed").tag(TaskFilter.completed)
+                    Text("Pending").tag(TaskFilter.pending)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
 
-                            Text("no tasks fouund")
-                                .font(.headline)
-                                .foregroundColor(.secondary)
+                ZStack {
+                    if viewModel.loadingState.isLoading
+                        && viewModel.tasks.isEmpty
+                    {
+                        ProgressView("Loading tasks...")
+                    } else if viewModel.filteredTasks.isEmpty {
+                        VStack(spacing: 16) {
+                            Image(systemName: "tray")
+                                .font(.system(size: 60))
+                                .foregroundColor(.gray)
+                            Text(
+                                viewModel.tasks.isEmpty
+                                    ? "No tasks found"
+                                    : "No \(filterText()) tasks"
+                            )
+                            .font(.headline)
+                            .foregroundColor(.secondary)
                         }
                     } else {
                         ScrollView {
                             LazyVStack(spacing: 12) {
-                                ForEach(viewModel.tasks, id: \.id) { task in
-                                    TaskRowView(
-                                        task: task,
-                                        isLocal: viewModel.isLocalTask(taskId: task.id),
-                                        onToggle: {
-                                            viewModel.toggleTaskStatus(taskId: task.id)
-                                        }
-                                    )
+                                ForEach(viewModel.filteredTasks, id: \.id) {
+                                    task in
+                                    NavigationLink(
+                                        destination: TaskDetailView(
+                                            task: task,
+                                            isLocal: viewModel.isLocalTask(
+                                                taskId: task.id
+                                            ),
+                                            onDelete: {
+                                                viewModel.deleteTask(
+                                                    taskId: task.id
+                                                )
+                                            },
+                                            onToggle: {
+                                                viewModel.toggleStatusOfTask(
+                                                    taskId: task.id
+                                                )
+                                            }
+                                        )
+                                    ) {
+                                        TaskRowView(
+                                            task: task,
+                                            isLocal: viewModel.isLocalTask(
+                                                taskId: task.id
+                                            ),
+                                            onToggle: {
+                                                viewModel.toggleStatusOfTask(
+                                                    taskId: task.id
+                                                )
+                                            }
+                                        )
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
                                 }
                             }
                             .padding()
@@ -91,10 +133,19 @@ struct TasksListView: View {
             }
         }
     }
+
+    private func filterText() -> String {
+        switch viewModel.selectedFilter {
+        case .all:
+            return "all"
+        case .completed:
+            return "completed"
+        case .pending:
+            return "pending"
+        }
+    }
 }
 
 #Preview {
     TasksListView()
 }
-
-
