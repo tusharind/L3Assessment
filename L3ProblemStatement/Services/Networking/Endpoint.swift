@@ -7,7 +7,9 @@ struct Endpoint {
     var body: Encodable? = nil
     var headers: [String: String] = [:]
 
-    func makeRequest(baseURL: String = "https://jsonplaceholder.typicode.com/todos") throws -> URLRequest {
+    func makeRequest(
+        baseURL: String = "https://jsonplaceholder.typicode.com/todos"
+    ) throws -> URLRequest {
         guard var components = URLComponents(string: baseURL + path) else {
             throw NetworkError.invalidURL
         }
