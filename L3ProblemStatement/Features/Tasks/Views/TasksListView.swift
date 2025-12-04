@@ -11,15 +11,13 @@ struct TasksListView: View {
                 if let errorMessage = viewModel.loadingState.errorMessage {
                     HStack {
                         Text(errorMessage)
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+
                         Spacer()
                         Button("Retry") {
                             Task {
                                 await viewModel.fetchTasks()
                             }
                         }
-                        .font(.caption)
 
                     }
                     .padding(.horizontal, 16)
@@ -43,15 +41,12 @@ struct TasksListView: View {
                         ProgressView("Loading tasks...")
                     } else if viewModel.filteredTasks.isEmpty {
                         VStack(spacing: 16) {
-                            Image(systemName: "tray")
-                                .font(.system(size: 60))
-                                .foregroundColor(.gray)
+
                             Text(
                                 viewModel.tasks.isEmpty
                                     ? "No tasks found"
                                     : "No \(filterText()) tasks"
                             )
-                            .font(.headline)
                             .foregroundColor(.secondary)
                         }
                     } else {

@@ -70,7 +70,8 @@ class TasksListVM: ObservableObject {
         taskEntity.userID = 1
 
         if let dueDate = dueDate {
-            let formatter = ISO8601DateFormatter()
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
             taskEntity.dueDate = formatter.string(from: dueDate)
         }
 

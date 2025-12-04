@@ -54,15 +54,15 @@ struct LoginView: View {
                     }
                 }
                 .background(
-                    email.isEmpty || password.isEmpty ? Color.gray : Color.blue
+                    Color.blue
                 )
                 .cornerRadius(10)
                 .padding(.horizontal, 30)
                 .padding(.top, 10)
                 .disabled(
-                    email.isEmpty || password.isEmpty || viewModel.loadingState.isLoading
+                    email.isEmpty || password.isEmpty
                 )
-                
+
                 Text("seeded user: tushar@gmail.com password: tushar@123")
                     .font(.caption)
 
