@@ -25,12 +25,9 @@ class AuthViewModel: ObservableObject {
 
         do {
             let users = try context.fetch(fetchRequest)
-            print("Login attempt for: \(email), found \(users.count) users")
 
             if let user = users.first {
-                print(
-                    "User found: \(user.email ?? ""), password match: \(user.password == password)"
-                )
+
                 if user.password == password {
                     isAuthenticated = true
                     UserDefaults.standard.set(true, forKey: "isLoggedIn")

@@ -2,11 +2,11 @@ import Foundation
 
 final class NetworkClient: NetworkClientProtocol {
 
-    private let interceptor: RequestInterceptor
+    private let interceptor: LoggerInterceptor
     private let session: URLSession
 
     init(
-        interceptor: RequestInterceptor,
+        interceptor: LoggerInterceptor,
         session: URLSession = .shared
     ) {
         self.interceptor = interceptor

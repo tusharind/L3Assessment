@@ -84,7 +84,6 @@ class TasksListVM: ObservableObject {
 
         do {
             let entities = try context.fetch(fetchRequest)
-            print("Loaded \(entities.count) local tasks from CoreData")
 
             let localTasks = entities.map { entity in
                 TaskModel(
@@ -102,3 +101,4 @@ class TasksListVM: ObservableObject {
     }
 }
  
+

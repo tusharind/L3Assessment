@@ -11,7 +11,7 @@ final class PersistenceController {
 
         container.loadPersistentStores { _, error in
             if let error = error {
-                fatalError("Core Data load error: \(error)")
+                fatalError("Core Data ki error: \(error)")
             }
         }
     }
@@ -26,8 +26,10 @@ final class PersistenceController {
             do {
                 try context.save()
             } catch {
-                print("Core Data save error: \(error)")
+                print("Core Data ki error: \(error)")
             }
         }
     }
 }
+
+
