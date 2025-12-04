@@ -17,7 +17,7 @@ struct TaskRowView: View {
                         ? "checkmark.circle.fill" : "circle"
                 )
                 .font(.system(size: 24))
-                .foregroundColor(task.completed ? .green : .gray.opacity(0.5))
+                .foregroundColor(task.completed ? .green : .gray)
             }
             .disabled(!isLocal)
 

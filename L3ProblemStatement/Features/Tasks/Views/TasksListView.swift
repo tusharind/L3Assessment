@@ -20,7 +20,7 @@ struct TasksListView: View {
                             }
                         }
                         .font(.caption)
-                        .buttonStyle(.borderless)
+
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
