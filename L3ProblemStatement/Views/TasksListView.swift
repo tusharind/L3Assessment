@@ -41,7 +41,13 @@ struct TasksListView: View {
                         ScrollView {
                             LazyVStack(spacing: 12) {
                                 ForEach(viewModel.tasks, id: \.id) { task in
-                                    TaskRowView(task: task)
+                                    TaskRowView(
+                                        task: task,
+                                        isLocal: viewModel.isLocalTask(taskId: task.id),
+                                        onToggle: {
+                                            viewModel.toggleTaskStatus(taskId: task.id)
+                                        }
+                                    )
                                 }
                             }
                             .padding()

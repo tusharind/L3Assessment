@@ -99,6 +99,50 @@ class TasksListVM: ObservableObject {
             print("Failed to load local tasks: \(error)")
         }
     }
+    
+    func toggleTaskStatus(taskId: Int) {
+        let context = persistence.context
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %d", taskId)
+        
+        do {
+            let entities = try context.fetch(fetchRequest)
+            
+            if let taskEntity = entities.first {
+                taskEntity.completed.toggle()
+                persistence.saveContext()
+                
+                if let index = tasks.firstIndex(where: { $0.id == taskId }) {
+                    let updatedTask = tasks[index]
+                    tasks[index] = TaskModel(
+                        userID: updatedTask.userID,
+                        id: updatedTask.id,
+                        title: updatedTask.title,
+                        completed: !updatedTask.completed,
+                        dueDate: updatedTask.dueDate,
+                    )
+                }
+                
+                print("Toggled task status for id: \(taskId)")
+            }
+        } catch {
+            print("Failed to toggle task status: \(error)")
+        }
+    }
+    
+    func isLocalTask(taskId: Int) -> Bool {
+        let context = persistence.context
+        let fetchRequest: NSFetchRequest<TaskEntity> = TaskEntity.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "id == %d", taskId)
+        
+        do {
+            let count = try context.count(for: fetchRequest)
+            return count > 0
+        } catch {
+            return false
+        }
+    }
 }
  
+
 

@@ -2,20 +2,37 @@ import SwiftUI
 
 struct TaskRowView: View {
     let task: TaskModel
+    let isLocal: Bool
+    let onToggle: () -> Void
 
     var body: some View {
         HStack(spacing: 16) {
-            Image(
-                systemName: task.completed ? "checkmark.circle.fill" : "circle"
-            )
-            .font(.system(size: 24))
-            .foregroundColor(task.completed ? .green : .gray.opacity(0.5))
+            Button(action: {
+                if isLocal {
+                    onToggle()
+                }
+            }) {
+                Image(
+                    systemName: task.completed ? "checkmark.circle.fill" : "circle"
+                )
+                .font(.system(size: 24))
+                .foregroundColor(task.completed ? .green : .gray.opacity(0.5))
+            }
+            .disabled(!isLocal)
 
             VStack(alignment: .leading, spacing: 6) {
-                Text(task.title)
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundColor(.primary)
-                    .lineLimit(2)
+                HStack {
+                    Text(task.title)
+                        .font(.system(size: 16, weight: .medium))
+                        .foregroundColor(.primary)
+                        .lineLimit(2)
+                    
+                    if isLocal {
+                        Image(systemName: "internaldrive")
+                            .font(.caption2)
+                            .foregroundColor(.blue)
+                    }
+                }
 
                 HStack(spacing: 12) {
                     if let dueDate = task.dueDate, !dueDate.isEmpty {
@@ -42,6 +59,7 @@ struct TaskRowView: View {
         .background(Color(.systemBackground))
         .cornerRadius(12)
         .shadow(color: Color.black.opacity(0.05), radius: 8, x: 0, y: 2)
+        .opacity(isLocal ? 1.0 : 0.7)
     }
 
     private func formatDate(_ dateString: String) -> String {
