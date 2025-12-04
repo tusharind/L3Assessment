@@ -25,8 +25,12 @@ class AuthViewModel: ObservableObject {
 
         do {
             let users = try context.fetch(fetchRequest)
+            print("Login attempt for: \(email), found \(users.count) users")
 
             if let user = users.first {
+                print(
+                    "User found: \(user.email ?? ""), password match: \(user.password == password)"
+                )
                 if user.password == password {
                     isAuthenticated = true
                     UserDefaults.standard.set(true, forKey: "isLoggedIn")
@@ -36,9 +40,11 @@ class AuthViewModel: ObservableObject {
                 }
             } else {
                 errorMessage = "User not found"
+                print("No user found with email: \(email)")
             }
         } catch {
             errorMessage = "Login failed: \(error.localizedDescription)"
+            print("Login error: \(error)")
         }
 
         isLoading = false
@@ -59,21 +65,19 @@ class AuthViewModel: ObservableObject {
         let fetchRequest: NSFetchRequest<Users> = Users.fetchRequest()
 
         do {
-            let count = try context.count(for: fetchRequest)
+            let existingUsers = try context.fetch(fetchRequest)
+            print("Existing users count: \(existingUsers.count)")
 
-            if count == 0 {
-                let defaultUser = Users(context: context)
-                let newUser = Users(context: context)
-
-                defaultUser.email = "admin@test.com"
-                defaultUser.password = "password123"
-                newUser.email = "tushar@gmail.com"
-                newUser.password = "tushar@123"
-                persistence.saveContext()
+            for user in existingUsers {
+                print("User: \(user.email ?? "no email")")
             }
+            let newUser = Users(context: context)
+
+            newUser.email = "tushar@gmail.com"
+            newUser.password = "tushar@123"
+            persistence.saveContext()
         } catch {
             print("Failed to seed user: \(error)")
         }
     }
 }
-

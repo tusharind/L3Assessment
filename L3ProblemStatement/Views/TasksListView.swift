@@ -45,9 +45,6 @@ struct TasksListView: View {
                         authViewModel.logout()
                     }) {
                         HStack(spacing: 4) {
-                            Image(
-                                systemName: "rectangle.portrait.and.arrow.right"
-                            )
                             Text("Logout")
                         }
                         .foregroundColor(.red)
